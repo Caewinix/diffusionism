@@ -1,0 +1,28 @@
+__import__ (script): configs.models.scripts.diffusion_model
+
+diffusion_model: !diffusionism.diffusion.DiffusionModel
+  diffuser: !diffusionism.diffusion.diffusers.GaussianDiffuser
+  sampler: !diffusionism.diffusion.samplers.GaussianDDIMSampler
+  backbone: !diffusionism.models.hdit.HDiT
+    in_channels: 1
+    out_channels: 1
+    local_condition_channels: 1
+    patch_size: [4, 4]
+    widths: [128, 256]
+    middle_width: 512
+    depths: [2, 2]
+    middle_depth: 4
+    layer_block_builders: script.layer_block_builders
+    mapping_width: 256
+    mapping_depth: 2
+    mapping_dim_feed_forward: 256
+    mapping_dropout: 0.
+    is_layer_cond_module_prior: True
+    layer_cond_init_modules: null
+    layer_cond_guidence_modules: null
+    guidence_modules: script.guidence_modules
+  diffusion_buffer: !diffusionism.diffusion.buffers.GaussianDiffusionBuffer
+    betas: !diffusionism.diffusion.buffers.degradation_schedule.linear_schedule
+      start: 1.e-4
+      end: 2.e-2
+      num_timesteps: 1000
