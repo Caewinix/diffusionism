@@ -30,4 +30,4 @@ train_data_loader: !torch.utils.data.DataLoader
   batch_size: 48
   shuffle: True
   num_workers: 4
-  dataset: 
+  dataset: # Insert the dataset initialization.

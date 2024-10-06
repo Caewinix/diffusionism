@@ -3,7 +3,7 @@ val_data_loader: !torch.utils.data.DataLoader
   shuffle: False
   num_workers: 4
   dataset: !diffusionism.utils.dataset.RandomDataset
-    dataset: 
+    dataset: # Insert the dataset initialization.
     limit_num: 48
 
 individual:
