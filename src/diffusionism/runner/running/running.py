@@ -403,23 +403,23 @@ def val(
             out_str = '\tOthers - '
             for i, (key, value) in enumerate(others.items()):
                 out_str += f'{key}: {value}'
-                if i != num_metrics - 1:
+                if i != len(others) - 1:
                     out_str += ', '
             tqdm.write(out_str)
 
 
-# def _test_show_metrics(metrics, trainer: pl.Trainer):
-#     trainer_metrics = trainer.callback_metrics
-#     num_metrics = len(metrics)
-#     out_str = ''
-#     for i, (key, value) in enumerate(metrics.items()):
-#         if key not in trainer_metrics:
-#             out_str += f'{key}: {value.mean().item()}'
-#             if i != num_metrics - 1:
-#                 out_str += ', '
-#     if out_str != '':
-#         out_str = f'\n{out_str}'
-#     tqdm.write(out_str)
+def _test_show_metrics(metrics, trainer: pl.Trainer):
+    trainer_metrics = trainer.callback_metrics
+    num_metrics = len(metrics)
+    out_str = ''
+    for i, (key, value) in enumerate(metrics.items()):
+        if key not in trainer_metrics:
+            out_str += f'{key}: {value.mean().item()}'
+            if i != num_metrics - 1:
+                out_str += ', '
+    if out_str != '':
+        out_str = f'\n{out_str}'
+    tqdm.write(out_str)
 
 
 def test(
@@ -480,6 +480,7 @@ def test(
         os.makedirs(output_dir, exist_ok=True)
         torch.save(metrics, os.path.join(output_dir, 'test_results.pt'))
     
+    _test_show_metrics(metrics, trainer)
     # metrics, generation, target = metrics
     # _test_show_metrics(metrics, trainer)
     
