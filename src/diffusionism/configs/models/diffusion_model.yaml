@@ -1,0 +1,9 @@
+diffusion_model: !diffusionism.diffusion.DiffusionModel
+  diffuser: !diffusionism.diffusion.diffusers.GaussianDiffuser
+  sampler: !diffusionism.diffusion.samplers.GaussianDDIMSampler
+  backbone: # Insert the backbone initialization.
+  diffusion_buffer: !diffusionism.diffusion.buffers.GaussianDiffusionBuffer
+    betas: !diffusionism.diffusion.buffers.degradation_schedule.linear_schedule
+      start: 1.e-4
+      end: 2.e-2
+      num_timesteps: 1000
