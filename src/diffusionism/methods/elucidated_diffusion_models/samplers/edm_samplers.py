@@ -1,5 +1,0 @@
-from .samplers import ElucidatedDiffusionModelsEulerSampler, ElucidatedDiffusionModelsHeunSampler
-
-
-EDMEulerSampler = ElucidatedDiffusionModelsEulerSampler
-EDMHeunSampler = ElucidatedDiffusionModelsHeunSampler

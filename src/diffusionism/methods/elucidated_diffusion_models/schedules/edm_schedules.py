@@ -1,6 +1,0 @@
-from .schedules import ElucidatedDiffusionModelsSchedule, VariancePreservingSchedule, VarianceExplodingSchedule
-
-
-EDMSchedule = ElucidatedDiffusionModelsSchedule
-VPSchedule = VariancePreservingSchedule
-VESchedule = VarianceExplodingSchedule

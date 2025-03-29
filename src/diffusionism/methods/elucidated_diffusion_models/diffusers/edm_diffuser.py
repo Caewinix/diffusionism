@@ -1,4 +1,0 @@
-from .diffuser import ElucidatedDiffusionModelsDiffuser
-
-
-EDMDiffuser = ElucidatedDiffusionModelsDiffuser

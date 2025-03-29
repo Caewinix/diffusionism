@@ -1,4 +1,0 @@
-from .diffuser import DiffusionProbabilisticModelsDiffuser
-
-
-DPMDiffuser = DiffusionProbabilisticModelsDiffuser
