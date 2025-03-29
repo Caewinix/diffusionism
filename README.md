@@ -22,7 +22,7 @@ pip install diffusionism
 ## Quick Start
 
 ### Choise 1: Configuration-Based Execution
-Copy `diffusionism/configs` as a template to the project folder, and all `YAML` file can be modified to meet the task requirements.
+Copy `diffusionism/configs` as a template to the project folder, and all YAML files can be modified to meet the task requirements.
 ```bash
 # Training and validation
 python -m diffusionism.run --train configs/train.yaml --val configs/val.yaml -m configs/diffusion/diffusion_model.yaml -r configs/diffusion/runner.yaml -n experiment_01
