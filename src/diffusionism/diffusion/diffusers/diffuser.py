@@ -247,7 +247,7 @@ class Diffuser(Diffusion, schedule=DiffusionSchedule):
             parameterization (Parameterization): The parameterization situation of the
                 diffusion model.
             variables (Union[Sequence[Any], Dict[str, Any], None]): The variables stored in the
-                :attr:`get_losses` to keep the context.
+                :attr:`step_loss` to keep the context.
             **diffusion_kwargs: The keyword arguments that drive the diffusion process.
 
         Returns:
@@ -288,7 +288,7 @@ class Diffuser(Diffusion, schedule=DiffusionSchedule):
             parameterization (Parameterization): The parameterization situation of the
                 diffusion model.
             variables (Union[Sequence[Any], Dict[str, Any], None]): The variables stored in the
-                :attr:`get_losses` to keep the context.
+                :attr:`step_loss` to keep the context.
             **diffusion_kwargs: The keyword arguments that drive the diffusion process.
 
         Returns:
@@ -324,7 +324,7 @@ class Diffuser(Diffusion, schedule=DiffusionSchedule):
             parameterization (Parameterization): The parameterization situation of the
                 diffusion model.
             variables (Union[Sequence[Any], Dict[str, Any], None]): The variables stored in the
-                :attr:`get_losses` to keep the context.
+                :attr:`step_loss` to keep the context.
             **kwargs: The keyword arguments that drive both the diffusion process and the
                 backbone model.
 
@@ -372,7 +372,7 @@ class Diffuser(Diffusion, schedule=DiffusionSchedule):
             loss_function (Callable[[Tensor, Tensor], Tensor]): The loss function that
                 is used to optimize.
             variables (Union[Sequence[Any], Dict[str, Any], None]): The variables stored in the
-                :attr:`get_losses` to keep the context.
+                :attr:`step_loss` to keep the context.
             **diffusion_kwargs: The keyword arguments that drive the diffusion process.
 
         Returns:
@@ -421,7 +421,7 @@ class Diffuser(Diffusion, schedule=DiffusionSchedule):
             loss_function (Callable[[Tensor, Tensor], Tensor]): The loss function that
                 is used to optimize.
             variables (Union[Sequence[Any], Dict[str, Any], None]): The variables stored in the
-                :attr:`get_losses` to keep the context.
+                :attr:`step_loss` to keep the context.
             **kwargs: The keyword arguments that drive both the diffusion process and the
                 backbone model.
 
