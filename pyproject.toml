@@ -1,16 +1,17 @@
 [project]
 name = "diffusionism"
-version = "0.0.1-beta.3"
+version = "0.0.1-beta.5"
 authors = [
   { name = "Caewinix", email = "Caewinix@yeah.net" },
 ]
 dependencies = [
-  "torch>=1.6.0",
+  "torch>=2.0.0",
   "numpy",
-  "torchflint",
-  "inyaml"
+  "torchflint>=0.0.1b10",
+  "inyaml>=0.0.1b10",
+  "pytorch_lightning>=2.4.0"
 ]
-description = "A diffusion model implementation that is easy to modify the functions by overwriting them."
+description = "Diffusionism is a Python library for rapid prototyping, experimentation, and deployment of diffusion models in deep learning. It offers a structured, inheritance-based architecture encapsulating core diffusion components like forward diffusion, reverse denoising, and noise schedules, emphasizing extensibility and reusability. Researchers can easily integrate novel methods by subclassing and overriding necessary functions. The library provides out-of-the-box pipelines for training, validation, and inference, while allowing advanced users to customize training loops and protocols. By separating domain-agnostic mechanics from model-specific logic, diffusionism accelerates development while ensuring reproducibility and reducing implementation overhead."
 readme = "README.md"
 requires-python = ">=3.7"
 classifiers = [

@@ -1,0 +1,20 @@
+diffusion_model: !diffusionism.diffusion.DiffusionModel
+  diffuser: !diffusionism.methods.edm.diffusers.EDMDiffuser
+  sampler: !diffusionism.methods.edm.samplers.EDMHeunSampler
+  timesteps_distribution: !diffusionism.diffusion.schedules.context.distributions.cosine_interpolated.init
+    image_d: 256
+    noise_d_low: 32
+    noise_d_high: 256
+    sigma_data: 0.5
+    min_value: 1.e-3
+    max_value: 1.e3
+  timesteps: !diffusionism.diffusion.schedules.context.sequencings.karras_sigma.init
+    num_steps: 18
+    sigma_min: 1e-2
+    sigma_max: 160
+    rho: 7.
+  backbone: # Insert the backbone setup.
+  diffusion_schedule: !diffusionism.methods.edm.schedules.EDMSchedule
+    data_std: 0.5
+    hyperparameters: !diffusionism.methods.edm.hyperparameters.ChurnStochasticHyperparameters []
+  parameterization: !diffusionism.methods.edm.parameterizations.InputStartParameterization []

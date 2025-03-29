@@ -1,0 +1,15 @@
+val_data_loader: !torch.utils.data.DataLoader
+  batch_size: 48
+  shuffle: False
+  num_workers: 4
+  dataset: !diffusionism.utils.datasets.RandomDataset
+    dataset: # Insert the dataset initialization.
+    limit_num: 48
+
+individual:
+  devices: [0]
+  precision: 'bf16-mixed'
+  checkpoints_root: './saved_checkpoints'
+  filename_format: '{epoch}-{step}'
+  start_epoch: 0
+  start_step: null
