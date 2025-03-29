@@ -1,7 +1,7 @@
 # Diffusionism: Modular Framework for Customizable Diffusion Models
 
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Python Version](https://img.shields.io/badge/Python-3.7%2B-green)]()
+[![Python Version](https://img.shields.io/badge/Python-3.7%2B-green)](https://www.python.org/)
 [![PyTorch Version](https://img.shields.io/badge/PyTorch-2.0%2B-orange)](https://pytorch.org/)
 [![PyTorch Lightning Version](https://img.shields.io/badge/PyTorch_Lightning-2.4.0%2B-blue)](https://lightning.ai/)
 
