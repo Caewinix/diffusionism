@@ -33,7 +33,7 @@ python -m diffusionism.run --test configs/test.yaml -m configs/diffusion/diffusi
 Make sure the name of the experiment is kept the same.
 
 ### Choise 2: Only Using Predefined Components
-Assuming that the `UNet` module has been imported and saved as a variable named as `unet`.
+Assuming that the `UNet` module has been imported and instantiated as a variable named as `unet`.
 ```python
 import torch
 from diffusionism.methods.dpm.diffusers import DPMDiffuser
@@ -133,7 +133,7 @@ class DiffusionProbabilisticModelsDiffuser(Diffuser, schedule=DiffusionProbabili
 
 ### 2. Implement a Custom Sampler
 ```python
-from typing import overload, Optional, Sequence, Tuple, Union, Any, Dict
+from typing import Optional, Sequence, Tuple, Union, Any, Dict
 import torch
 from torch import Tensor
 from torch import nn
@@ -270,6 +270,13 @@ class DenoisingDiffusionProbabilisticModelsSampler(Sampler, schedule=DiffusionPr
         return model_mean + nonzero_mask * (0.5 * model_log_variance).exp() * noise
 ```
 Once again, it is not necessary to implement these as they can be found in `diffusionism.methods.dpm`, here just provide examples.
+
+## To Do
+- [ ] Implement EMA (Exponential Moving Average) Mechanism
+- [ ] Latent Diffusion
+- [ ] ​Discrete DDPM Compatibility Verification
+- [ ] ​Continuous-Time DDPM Implementation
+- [ ] ...
 
 ## Contributing
 We welcome contributions!
