@@ -78,7 +78,7 @@ sampler = DDPMSampler(
 This part will use DDPM as the example to show how to implement a custom diffusion model. The predifined one can be found in `diffusionism.methods.dpm`.
 
 Since the diffusion schedule and the parameterization are too complicated to define here, assume that `DiffusionProbabilisticModelsDiscreteSchedule` and `NoiseParameterization` are defined before the following parts.
-### 1. Implement Custom Diffuser
+### 1. Implement a Custom Diffuser
 ```python
 from typing import Callable, Optional
 from torch import nn
@@ -131,7 +131,7 @@ class DiffusionProbabilisticModelsDiffuser(Diffuser, schedule=DiffusionProbabili
         return x_t
 ```
 
-### 2. Implement Custom Sampler
+### 2. Implement a Custom Sampler
 ```python
 from typing import overload, Optional, Sequence, Tuple, Union, Any, Dict
 import torch
