@@ -1,4 +1,3 @@
-```markdown
 # Diffusionism: Modular Framework for Customizable Diffusion Models
 
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
