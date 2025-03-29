@@ -56,7 +56,7 @@ model = DiffusionModel(
 )
 
 # Standalone usage
-diffusion_schedule=DPMDiscreteSchedule(betas=torch.linspace(1.e-4, 2.e-2, 1000, dtype=torch.float64))
+diffusion_schedule = DPMDiscreteSchedule(betas=torch.linspace(1.e-4, 2.e-2, 1000, dtype=torch.float64))
 
 diffuser = DPMDiffuser(
     backbone=unet,
@@ -75,10 +75,10 @@ sampler = DDPMSampler(
 ```
 
 ## Customization Guide
-This part will use DDPM as the example to show how to implement a custom diffusion model. The predifined one can be found in `diffusionism.methods.dpm`.
+This part will use DDPM as the example to show how to implement a custom diffusion model. The predefined one can be found in `diffusionism.methods.dpm`.
 
 Since the diffusion schedule and the parameterization are too complicated to define here, assume that `DiffusionProbabilisticModelsDiscreteSchedule` and `NoiseParameterization` are defined before the following parts.
-### 1. Implement a Custom Diffuser
+### 1. Implement the Custom Diffuser
 ```python
 from typing import Callable, Optional
 from torch import nn
@@ -131,7 +131,7 @@ class DiffusionProbabilisticModelsDiffuser(Diffuser, schedule=DiffusionProbabili
         return x_t
 ```
 
-### 2. Implement a Custom Sampler
+### 2. Implement the Custom Sampler
 ```python
 from typing import Optional, Sequence, Tuple, Union, Any, Dict
 import torch
@@ -269,7 +269,7 @@ class DenoisingDiffusionProbabilisticModelsSampler(Sampler, schedule=DiffusionPr
         nonzero_mask = (1 - (timestep == 0).float()).reshape(presampled_middle.size(0), *((1,) * (len(presampled_middle.shape) - 1)))
         return model_mean + nonzero_mask * (0.5 * model_log_variance).exp() * noise
 ```
-Once again, it is not necessary to implement these as they can be found in `diffusionism.methods.dpm`, here just provide examples.
+Once again, it is not necessary to implement these as they can be found in `diffusionism.methods.dpm`, since only examples are provided here.
 
 ## To Do
 - [ ] Implement EMA (Exponential Moving Average) Mechanism
