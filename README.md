@@ -1,6 +1,6 @@
 # Diffusionism: Modular Framework for Customizable Diffusion Models
 
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Python Version](https://img.shields.io/badge/Python-3.7%2B-green)](https://www.python.org/)
 [![PyTorch Version](https://img.shields.io/badge/PyTorch-2.0%2B-orange)](https://pytorch.org/)
 [![PyTorch Lightning Version](https://img.shields.io/badge/PyTorch_Lightning-2.4.0%2B-blue)](https://lightning.ai/pytorch-lightning)
@@ -274,8 +274,9 @@ Once again, it is not necessary to implement these as they can be found in `diff
 ## To Do
 - [ ] Implement EMA (Exponential Moving Average) Mechanism
 - [ ] Latent Diffusion
-- [ ] ​Discrete DDPM Compatibility Verification
-- [ ] ​Continuous-Time DDPM Implementation
+- [ ] ​Discrete DDPM and DDIM Compatibility Verification
+- [ ] ​Continuous-Time DDPM and DDIM Implementation
+- [ ] Introduce DPM-Solver and DPM-Solver++
 - [ ] ...
 
 ## Contributing
