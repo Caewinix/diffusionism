@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python Version](https://img.shields.io/badge/Python-3.7%2B-green)](https://www.python.org/)
 [![PyTorch Version](https://img.shields.io/badge/PyTorch-2.0%2B-orange)](https://pytorch.org/)
-[![PyTorch Lightning Version](https://img.shields.io/badge/PyTorch_Lightning-2.4.0%2B-blue)](https://lightning.ai/)
+[![PyTorch Lightning Version](https://img.shields.io/badge/PyTorch_Lightning-2.4.0%2B-blue)](https://lightning.ai/pytorch-lightning)
 
 **Diffusionism** is a PyTorch-based framework for building and experimenting with diffusion models through decoupled forward/reverse processes and configuration-driven workflows. Designed for researchers seeking flexibility, it enables both rapid prototyping of novel diffusion mechanics and production-ready training pipelines.
 
