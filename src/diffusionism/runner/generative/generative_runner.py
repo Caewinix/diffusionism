@@ -79,8 +79,9 @@ class GenerativeRunner(ModelRunner):
     def get_target_data(self, batch: torch.Tensor) -> torch.Tensor:
         return self.target_data_getter(batch)
     
-    def get_source_data(self, batch: torch.Tensor) -> torch.Tensor:
-        return self.source_data_getter(batch)
+    def get_source_data(self, batch: torch.Tensor) -> Optional[torch.Tensor]:
+        if self.source_data_getter is not None:
+            return self.source_data_getter(batch)
     
     def get_additional_data(self, batch: torch.Tensor) -> Tuple[torch.Tensor, ...]:
         return _tuplize(self.data_getter, batch)
@@ -91,11 +92,6 @@ class GenerativeRunner(ModelRunner):
     
     def process_training_step_mean_metrics(self, loss):
         self.log('Loss', loss, prog_bar=True, logger=True, on_step=True, on_epoch=True, sync_dist=True)
-        # self.log("Global Step", self.global_step, prog_bar=True, logger=False, on_step=True, on_epoch=False)
-    
-    # def end_for_training_epoch(self, losses: torch.Tensor):
-    #     self.log('Epoch Loss', losses.mean(), prog_bar=True, logger=True, on_step=False, on_epoch=True)
-    #     # self.log('Epoch', self.current_epoch, prog_bar=True, logger=True, on_step=False, on_epoch=True)
     
     def generate(self, batch, batch_idx, source_input: Optional[torch.Tensor], data: Tuple[torch.Tensor, ...], target_input: Optional[torch.Tensor] = None) -> torch.Tensor:
         pass
@@ -118,7 +114,8 @@ class GenerativeRunner(ModelRunner):
         
         """
         target_input: torch.Tensor = self.get_target_data(batch)
-        generation = self.generate(batch, batch_idx, self.get_source_data(batch), self.get_additional_data(batch), target_input)
+        source: Optional[torch.Tensor] = self.get_source_data(batch)
+        generation = self.generate(batch, batch_idx, source, self.get_additional_data(batch), target_input)
         map_dim = tuple(range(target_input.ndim - 2, target_input.ndim))
         target_input = torchflint.map_range(target_input, dim=map_dim)
         generation = torchflint.map_range(generation, dim=map_dim)
@@ -129,45 +126,10 @@ class GenerativeRunner(ModelRunner):
         else:
             collection_dict = {f'{log_prefix}-{key}' : value for key, value in metric_values.items()}
         if len(collection_dict) > 0:
-            # self.log_dict(collection_dict, prog_bar=False, logger=False, on_step=True, on_epoch=True)
             self.log_dict({key : value.mean() for key, value in collection_dict.items()}, logger=sync_to_logger, on_step=True, on_epoch=True, sync_dist=True)
         if return_images:
-            return metric_values, features, generation, target_input
+            return metric_values, features, generation, target_input, source
         return metric_values, features
-    
-    # @torch.no_grad()
-    # def evaluation_epoch_end(self, outputs: List[Dict[str, torch.Tensor]], need_clear: bool = True) -> Mapping[str, torch.Tensor]:
-    #     """Gives the evaluation results of the whole dataset after all steps are evaluated, reaching
-    #     to the epoch end.
-
-    #     Args:
-    #         outputs (List[Dict[str, torch.Tensor]]): The output list containing all step results.
-    #         need_clear (bool): A flag that determines whether clearing the outputs list.
-
-    #     Returns:
-    #         Mapping: A dictionary that is gathered from the output list.
-        
-    #     """
-    #     keys = set()
-    #     for dictionary in outputs:
-    #         keys = keys.union(set(dictionary.keys()))
-    #     output_dict = outputs[0]
-    #     for output in outputs[1:]:
-    #         for key in keys:
-    #             key_output = output.get(key)
-    #             key_result_output = output_dict.get(key)
-    #             if key_result_output is not None:
-    #                 if not isinstance(key_result_output, list):
-    #                     output_dict[key] = [key_result_output]
-    #                 if key_output is not None:
-    #                     output_dict[key].append(key_output)
-    #             elif key_output is not None:
-    #                 output_dict[key] = [key_output]
-    #     for key in keys:
-    #         output_dict[key] = torch.vstack(output_dict[key]).mean()
-    #     if need_clear:
-    #         outputs.clear()
-    #     return output_dict
     
     @torch.no_grad()
     def validate_at_step(self, batch, batch_idx) -> Union[torch.Tensor, Tuple[torch.Tensor, ...]]:
@@ -176,9 +138,10 @@ class GenerativeRunner(ModelRunner):
         if need_images:
             if self.__validation_collection is None:
                 self.need_validation_results()
-            metric_values, features, generation, target = evaluation
+            metric_values, features, generation, target, source = evaluation
             self.__validation_collection[0].append(generation)
             self.__validation_collection[1].append(target)
+            self.__validation_collection[2].append(source)
         else:
             metric_values, features = evaluation
         generation_features, target_features = features
@@ -198,10 +161,10 @@ class GenerativeRunner(ModelRunner):
             self.__validation_target_features.clear()
             log.update({f'Val-{type(metric).__name__}' : metric(generation_features.detach_(), target_features.detach_()).mean() for metric in self.feature_metrics})
         if len(self.global_metrics) > 0:
-            generation, target = self.__concat_collection(self.__validation_collection)
+            generation, target, _ = self.__concat_collection(self.__validation_collection)
             log.update({f'Val-{type(metric).__name__}' : metric(generation, target).mean() for metric in self.global_metrics})
         if len(log) > 0:
-            self.log_dict(log, prog_bar=False, logger=True, on_step=False, on_epoch=True, sync_dist=True)
+            self.log_dict(log, prog_bar=True, logger=True, on_step=False, on_epoch=True, sync_dist=True)
     
     @torch.no_grad()
     def test_at_step(self, batch, batch_idx) -> Union[torch.Tensor, Tuple[torch.Tensor, ...]]:
@@ -210,9 +173,10 @@ class GenerativeRunner(ModelRunner):
         if need_images:
             if self.__test_collection is None:
                 self.need_test_results()
-            metric_values, features, generation, target = evaluation
+            metric_values, features, generation, target, source = evaluation
             self.__test_collection[0].append(generation)
             self.__test_collection[1].append(target)
+            self.__test_collection[2].append(source)
         else:
             metric_values, features = evaluation
         generation_features, target_features = features
@@ -232,34 +196,46 @@ class GenerativeRunner(ModelRunner):
             self.__test_target_features.clear()
             log.update({type(metric).__name__ : metric(generation_features.detach_(), target_features.detach_()).mean() for metric in self.feature_metrics})
         if len(self.global_metrics) > 0:
-            generation, target = self.__concat_collection(self.__test_collection)
+            generation, target, _ = self.__concat_collection(self.__test_collection)
             log.update({type(metric).__name__ : metric(generation, target).mean() for metric in self.global_metrics})
         if len(log) > 0:
-            self.log_dict(log, prog_bar=False, logger=True, on_step=False, on_epoch=True, sync_dist=True)
+            self.log_dict(log, prog_bar=True, logger=True, on_step=False, on_epoch=True, sync_dist=True)
     
-    def __concat_collection(self, collection) -> Tuple[torch.Tensor, torch.Tensor]:
+    def __concat_collection(self, collection) -> Tuple[torch.Tensor, torch.Tensor, Optional[torch.Tensor]]:
         if self.__generation is None:
-            generation, target = collection[0], collection[1]
+            generation, target, source = collection
             generation = torch.concat(generation, dim=0).permute(0, 2, 3, 1)
             target = torch.concat(target, dim=0).permute(0, 2, 3, 1)
+            if source[0] is None:
+                source = None
+            else:
+                source = torch.concat(source, dim=0).permute(0, 2, 3, 1)
             self.__generation = generation
             self.__target = target
-        return self.__generation, self.__target
+            self.__source = source
+        return self.__generation, self.__target, self.__source
         
     def __evaluation_results(self, results, collection) -> Union[torch.Tensor, Tuple[torch.Tensor, ...], Dict[str, torch.Tensor]]:
         if collection is not None:
-            generation, target = self.__concat_collection(collection)
+            generation, target, source = self.__concat_collection(collection)
             error_map = torch.abs(generation - target)
+            generation, target, error_map = generation.cpu(), target.cpu(), error_map.cpu()
             if isinstance(results, tuple):
                 results = results + (generation, target, error_map)
+                if source is not None:
+                    results = results + (source.cpu(),)
             elif isinstance(results, dict):
                 results.update({
                     'generation' : generation,
                     'target' : target,
                     'error' : error_map
                 })
+                if source is not None:
+                    results.update({'source' : source.cpu()})
             else:
                 results = results, generation, target, error_map
+                if source is not None:
+                    results = *results, source.cpu()
         return results
     
     def need_validation_results(self, need = True, need_images = True, *args, **kwargs):
@@ -273,8 +249,8 @@ class GenerativeRunner(ModelRunner):
         """
         super().need_validation_results(need, *args, **kwargs)
         if need_images:
-            self.__generation = self.__target = None
-            self.__validation_collection = ([], [])
+            self.__generation = self.__target = self.__source = None
+            self.__validation_collection = ([], [], [])
         else:
             self.__validation_collection = None
     
@@ -284,7 +260,7 @@ class GenerativeRunner(ModelRunner):
     
     def take_validation_results(self) -> Union[Tuple[torch.Tensor, ...], Tuple[Dict[str, torch.Tensor], torch.Tensor, torch.Tensor]]:
         result = super().take_validation_results()
-        self.__generation = self.__target = self.__validation_collection = None
+        self.__generation = self.__target = self.__source = self.__validation_collection = None
         return result
     
     def need_test_results(self, need = True, need_images = True, *args, **kwargs):
@@ -298,8 +274,8 @@ class GenerativeRunner(ModelRunner):
         """
         super().need_test_results(need, *args, **kwargs)
         if need_images:
-            self.__generation = self.__target = None
-            self.__test_collection = ([], [])
+            self.__generation = self.__target = self.__source = None
+            self.__test_collection = ([], [], [])
         else:
             self.__test_collection = None
     
@@ -309,5 +285,5 @@ class GenerativeRunner(ModelRunner):
     
     def take_test_results(self) -> Union[Tuple[torch.Tensor, ...], Tuple[Dict[str, torch.Tensor], torch.Tensor, torch.Tensor]]:
         result = super().take_test_results()
-        self.__generation = self.__target = self.__test_collection = None
+        self.__generation = self.__target = self.__source = self.__test_collection = None
         return result

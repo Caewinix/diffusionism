@@ -1,6 +1,6 @@
 [project]
 name = "diffusionism"
-version = "0.0.1-beta.6"
+version = "0.0.1-beta.7"
 authors = [
   { name = "Caewinix", email = "Caewinix@yeah.net" },
 ]
