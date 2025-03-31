@@ -1,0 +1,2 @@
+from .diffuser import ElucidatedDiffusionModelsDiffuser
+from .diffuser import ElucidatedDiffusionModelsDiffuser as EDMDiffuser

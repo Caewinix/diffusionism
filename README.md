@@ -22,15 +22,18 @@ pip install diffusionism
 ## Quick Start
 
 ### Choise 1: Configuration-Based Execution
-Copy `diffusionism/configs` as a template to the project folder, and all YAML files can be modified to meet the task requirements.
-```bash
-# Training and validation
-python -m diffusionism.run --train configs/train.yaml --val configs/val.yaml -m configs/diffusion/diffusion_model.yaml -r configs/diffusion/runner.yaml -n experiment_01
+Copy `diffusionism/configs` as a template to the project folder, and enter this folder. All YAML files can be modified to meet the task requirements.
 
-# Test
+For training and validation, just run:
+```bash
+python -m diffusionism.run --train configs/train.yaml --val configs/val.yaml -m configs/diffusion/diffusion_model.yaml -r configs/diffusion/runner.yaml -n experiment_01
+```
+
+After that, run the following to test:
+```bash
 python -m diffusionism.run --test configs/test.yaml -m configs/diffusion/diffusion_model.yaml -r configs/diffusion/runner.yaml -n experiment_01
 ```
-Make sure the name of the experiment is kept the same.
+Make sure the name of the experiment should be kept the same.
 
 ### Choise 2: Only Using Predefined Components
 Assuming that the `UNet` module has been imported and instantiated as a variable named as `unet`.
@@ -78,6 +81,7 @@ sampler = DDPMSampler(
 This part will use DDPM as the example to show how to implement a custom diffusion model. The predefined one can be found in `diffusionism.methods.dpm`.
 
 Since the diffusion schedule and the parameterization are too complicated to define here, assume that `DiffusionProbabilisticModelsDiscreteSchedule` and `NoiseParameterization` are defined before the following parts.
+
 ### 1. Implement the Custom Diffuser
 ```python
 from typing import Callable, Optional
@@ -272,9 +276,10 @@ class DenoisingDiffusionProbabilisticModelsSampler(Sampler, schedule=DiffusionPr
 Once again, it is not necessary to implement these as they can be found in `diffusionism.methods.dpm`, since only examples are provided here.
 
 ## To Do
+- [ ] Inference Code, Distinguished from the Test Code
 - [ ] Implement EMA (Exponential Moving Average) Mechanism
 - [ ] Latent Diffusion
-- [ ] ​Discrete DDPM and DDIM Compatibility Verification
+- [ ] ​Discrete DDPM and DDIM Compatibility Verification Due to the Code Update
 - [ ] ​Continuous-Time DDPM and DDIM Implementation
 - [ ] Introduce DPM-Solver and DPM-Solver++
 - [ ] ...
@@ -284,7 +289,7 @@ We welcome contributions!
 
 ## Citation
 ```bibtex
-@software{diffusionism2024,
+@misc{diffusionism2024,
   author = {Juanhua Zhang},
   title = {Diffusionism: Modular Framework for Customizable Diffusion Models},
   year = {2024},
