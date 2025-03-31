@@ -1,2 +1,0 @@
-from .schedule import DiffusionProbabilisticModelsDiscreteSchedule
-from .schedule import DiffusionProbabilisticModelsDiscreteSchedule as DPMDiscreteSchedule
