@@ -1,0 +1,12 @@
+settings:
+  devices: [0]
+  checkpoint_path: # Insert the path of the checkpoint that you want to load to test.
+  precision: 'bf16-mixed'
+  output_root: './output'
+  
+test_data_loader: !torch.utils.data.DataLoader
+  batch_size: 48
+  shuffle: False
+  num_workers: 4
+  dataset: !pipelight.utils.datasets.RandomDataset
+    dataset: # Insert the dataset initialization.

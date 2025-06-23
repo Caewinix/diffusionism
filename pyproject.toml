@@ -1,6 +1,6 @@
 [project]
 name = "diffusionism"
-version = "0.0.1-beta.7"
+version = "0.0.1-beta.8"
 authors = [
   { name = "Caewinix", email = "Caewinix@yeah.net" },
 ]
@@ -8,8 +8,7 @@ dependencies = [
   "torch>=2.0.0",
   "numpy",
   "torchflint>=0.0.1b10",
-  "inyaml>=0.0.1b10",
-  "pytorch_lightning>=2.4.0"
+  "pipelight"
 ]
 description = "Diffusionism is a Python library for rapid prototyping and deployment of diffusion models. It provides a flexible, inheritance-based architecture, allowing easy integration of new methods, with built-in pipelines for training and inference. It accelerates development and ensures reproducibility by separating general mechanics from model-specific logic."
 readme = "README.md"

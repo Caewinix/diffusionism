@@ -1,0 +1,9 @@
+__import__ (script): configs.scripts.running
+
+runner: !?diffusionism.runner.DiffusionRunner
+  target_data_getter: script.target_data_getter
+  source_data_getter: script.source_data_getter
+  data_getter: script.data_getter
+  initial_state_getter: script.initial_state_getter
+  initial_noise_strength: 1.0
+  metrics: # Please enter the function for calculating the metrics.
